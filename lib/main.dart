@@ -59,12 +59,13 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         // 텍스트 불러오기
                         getText();
-
                         // 신고 내역 불러오기
                         final response = await apiService.selectReportList(reporterName);
 
                         if (response.statusCode == 200) {
                           String responseBody = utf8.decode(response.bodyBytes);
+                          print('Response Body: $responseBody'); // 응답 확인을 위한 로그 출력
+
                           Map<String, dynamic> responseData = json.decode(responseBody);
                           setState(() {
                             reportList = responseData['result']['getReportList'] ?? [];
@@ -80,15 +81,19 @@ class _MyAppState extends State<MyApp> {
                 itemCount: reportList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    title: Text('${reportList[index]['reporter']}'+' 님의 신고'),
-                    subtitle: Text('${reportList[index]['reportType']}으로 ${reportList[index]['userName']}을 신고'),
+                    title: Text('${reportList[index]['reporter']['nickname']} 님의 신고'),
+                    subtitle: Text('${reportList[index]['reportType']}으로 ${reportList[index]['reportedUser']['nickname']}을 신고'),
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => ReportDetailPage( // 신고 상세조회 페이지로 이동
                             content: reportList[index]['content'],
                             carpoolId: reportList[index]['carpoolId'],
-                            userName: reportList[index]['userName'],
-                            reporter: reportList[index]['reporter'],
+                            reportedUserUid: reportList[index]['reportedUser']['uid'],
+                            reportedUserNickName: reportList[index]['reportedUser']['nickname'],
+                            reportedUserEmail: reportList[index]['reportedUser']['email'],
+                            reporterUid: reportList[index]['reporter']['uid'],
+                            reporterNickName: reportList[index]['reporter']['nickname'],
+                            reporterEmail: reportList[index]['reporter']['email'],
                             reportType: reportList[index]['reportType'],
                             reportDate: reportList[index]['reportDate'],
                           ))

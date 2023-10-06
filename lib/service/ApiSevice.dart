@@ -4,9 +4,9 @@ import 'package:http/http.dart' as http;
 class ApiService {
 
   /// 신고자 이름으로 신고 내역 조회
-  Future<http.Response> selectReportList(String myId) async {
+  Future<http.Response> selectReportList(String nickname) async {
 
-    final String apiUrl = 'http://54.180.105.67:8080/report/select/$myId';
+    String apiUrl = 'http://54.180.105.67:8080/report/select/$nickname';
 
     final response = await http.get(
       Uri.parse(apiUrl),
